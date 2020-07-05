@@ -6,6 +6,10 @@
 #define __TOKENIZE_H
 
 #include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <iostream>
+
 
 /*
  * str_tokenize(s, t, n) receives a string s of length n and tokenize
@@ -45,6 +49,10 @@
 size_t str_tokenize(char*, char**, const size_t);
 
 void trimTrailingSpaces(char* str);
+
+char* tolwr(char*);
+
+size_t bbline_tokenize(char* str, char** tokens, const size_t n);
 
 
 #endif /* __TOKENIZE_H */
