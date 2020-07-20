@@ -1,0 +1,50 @@
+
+   BULLETTIN BOARD SERVER v1.0
+    Sat Jul 18 14:49:28 2020
+
+
+****************************************************
+-> Command Line Override-> Maximum Threads : 5 
+-> Command Line Override-> Client listening port : 9001 
+-> Command Line Override-> Bullettin Board File : bbfile.txt 
+-> Command Line Override-> Peer listening port : 10001 
+-> Config File Setting  -> Server will run on Background.
+-> Command Line Override-> Server will delay file operations.
+-> Command Line Override-> Configuration file : bbserv.conf
+-> Command Line Override-> Peer servers : 
+   Peer 0 localhost 10002
+   Peer 1 localhost 10003
+-> Atleast 28 threads will be created based on configuration.
+****************************************************
+Sat Jul 18 14:49:28 2020 : Initiating the server start.
+
+Sat Jul 18 14:49:28 2020 : Server worker Thread 1 created
+Sat Jul 18 14:49:28 2020 : Server worker Thread 2 created
+Sat Jul 18 14:49:28 2020 : Server worker Thread 3 created
+Sat Jul 18 14:49:28 2020 : Server worker Thread 4 created
+Sat Jul 18 14:49:28 2020 : Server worker Thread 5 created
+
+
+Sat Jul 18 14:49:28 2020 : Peer Comms Control Thread 1 created
+Sat Jul 18 14:49:28 2020 : Peer Comms Control Thread 0 woke up.
+
+Sat Jul 18 14:49:28 2020 : Peer receiver Thread 1 created
+Sat Jul 18 14:49:28 2020 : Peer sender Thread 1 created
+Sat Jul 18 14:49:28 2020 : Peer sender Thread 2 created
+Sat Jul 18 14:49:28 2020 : Peer receiver Thread 2 created
+Sat Jul 18 14:49:28 2020 : Peer receiver Thread 3 created
+Sat Jul 18 14:49:28 2020 : Peer receiver Thread 4 created
+Sat Jul 18 14:49:28 2020 : Peer receiver Thread 5 created
+Sat Jul 18 14:49:28 2020 : Peer receiver Thread 6 created
+Sat Jul 18 14:49:28 2020 : Peer receiver Thread 7 created
+Sat Jul 18 14:49:28 2020 : Peer sender Thread 3 created
+Sat Jul 18 14:49:28 2020 : Peer receiver Thread 8 created
+Sat Jul 18 14:49:29 2020 : Peer receiver Thread 9 created
+Sat Jul 18 14:49:29 2020 : Peer receiver Thread 10 created
+Sat Jul 18 14:49:29 2020 : Peer sender Thread 4 created
+Sat Jul 18 14:49:29 2020 : Peer sender Thread 5 created
+Sat Jul 18 14:49:29 2020 : Peer sender Thread 6 created
+Sat Jul 18 14:49:29 2020 : Peer sender Thread 7 created
+Sat Jul 18 14:49:29 2020 : Peer sender Thread 8 created
+Sat Jul 18 14:49:29 2020 : Peer sender Thread 9 created
+Sat Jul 18 14:49:29 2020 : Peer sender Thread 10 created

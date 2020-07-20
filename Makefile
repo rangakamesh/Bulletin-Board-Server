@@ -24,8 +24,11 @@ server_operations.o: server_operations.h server_operations.cc
 peer_operations.o: peer_operations.h peer_operations.cc
 	$(CXX) $(CXXFLAGS) -c -o peer_operations.o peer_operations.cc
 
-bbserv: tokenize.o tcp-utils.o bbserv_utils.o thrd_mgmt.o  server_operations.o descriptor.o peer_operations.o
-	$(CXX) $(LDFLAGS) -o bbserv bbserv.cc tokenize.o tcp-utils.o bbserv_utils.o thrd_mgmt.o  server_operations.o descriptor.o peer_operations.o
+linkedList.o: linkedList.h linkedList.cc
+	$(CXX) $(CXXFLAGS) -c -o linkedList.o linkedList.cc
+
+bbserv: tokenize.o tcp-utils.o bbserv_utils.o thrd_mgmt.o  server_operations.o descriptor.o peer_operations.o linkedList.o
+	$(CXX) $(LDFLAGS) -o bbserv bbserv.cc tokenize.o tcp-utils.o bbserv_utils.o thrd_mgmt.o  server_operations.o descriptor.o peer_operations.o linkedList.o
 
 clean:
 	rm -f *~ *.o *.bak core \#*

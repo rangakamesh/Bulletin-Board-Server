@@ -21,12 +21,13 @@
 #include "tcp-utils.h"
 #include "tokenize.h"
 #include "descriptor.h"
+#include "linkedList.h"
 
 
 using namespace std;
 
 //Global holder of the servers configuration
-typedef struct sconf
+typedef struct sconfdescriptor
 {
   int T_MAX;
   int T_MAX_IND;
@@ -112,7 +113,7 @@ struct peer_stat
   bool replacer;
 };
 
-
+extern lList* clients_list; //A linked list maintaining the slave sockets that are opened for communication with the clients
 
 extern sconf server_config; //Global holder of server's config
 

@@ -3,18 +3,21 @@
  * the header before using it.
  */
 
- #include "server_operations.h"
+#include "server_operations.h"
 #include "peer_operations.h"
 
 void* server_operations(client_t* clnt)
 {
+
   char msg[2*MAX_LEN];  // logger string
   char request[MAX_LEN];  // logger string
   char response[2*BBLINE_LEN];  // logger string
+  bool quit_flag=false;
 
   client_info client;
   client.id = clnt->sd;
   strcpy(client.ip,clnt->ip);
+  pushVal(clients_list,client.id);
 
   long int ssock = client.id;
 
@@ -318,6 +321,7 @@ void* server_operations(client_t* clnt)
           {
             snprintf(response, 2*MAX_LEN, "4.0 BYE . Hope to see you later.\n\n");
             send(ssock, response, strlen(response),0);
+            quit_flag=true;
             break;
           }
           else
@@ -330,6 +334,14 @@ void* server_operations(client_t* clnt)
 
   snprintf(msg, 2*MAX_LEN, "Client : %ld , Connection terminated.",ssock);
   logger(msg);
+
+  pullSpec(clients_list,client.id);
+
+  if(!quit_flag) //using a separate 'send' just for a clean output at client side
+  {
+    snprintf(response, 2*MAX_LEN, "\n4.0 BYE . Hope to see you later.\n\n");
+    send(ssock, response, strlen(response),0);
+  }
 
   shutdown(ssock, SHUT_RDWR);
   close(ssock);

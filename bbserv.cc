@@ -2,6 +2,8 @@
 #include "thrd_mgmt.h"
 #include "server_operations.h"
 #include "peer_operations.h"
+#include "linkedList.h"
+
 
 const char* logfile = "bbserv.log";
 const char* pidfile = "bbserv.pid";
@@ -17,6 +19,9 @@ pthread_cond_t h_cond;
 
 int hupReceived=0;
 int quitReceived=0;
+
+pthread_mutex_t access_clients;
+lList* clients_list;
 
 static void sighupHandler(int sig)
 {
@@ -62,7 +67,15 @@ void quit_handler(int sig)
   snprintf(msg, MAX_LEN, "%s: KILLING SIG received. Shutting down server gracefuly.\n", __FILE__);
   logger(msg);
 
+  bealive=false;
 
+  shutdown(server_config.master_socket, SHUT_RDWR);
+  close(server_config.master_socket);
+
+  shutdown(server_config.peer_listener_master_socket, SHUT_RDWR);
+  close(server_config.peer_listener_master_socket);
+
+  shutdownList(clients_list);
 
   snprintf(msg, MAX_LEN, "Starting file team termination.\n");
   logger(msg);
@@ -85,26 +98,13 @@ void quit_handler(int sig)
 
   snprintf(msg, MAX_LEN, "Starting descriptor housekeep.\n");
   logger(msg);
-
   housekeep_descriptor();
-
   snprintf(msg, MAX_LEN, "Descriptor housekeep complete.\n");
   logger(msg);
 
-
-  bealive=false;
-
-  shutdown(server_config.master_socket, SHUT_RDWR);
-  close(server_config.master_socket);
-
-  shutdown(server_config.peer_listener_master_socket, SHUT_RDWR);
-  close(server_config.peer_listener_master_socket);
-
   snprintf(msg, MAX_LEN, "Starting Peer control team termination.\n");
   logger(msg);
-
   terminate_team(peer_control_team); //Wait for clients to disconnect and purge thread
-
   snprintf(msg, MAX_LEN, "Peer control team termination complete.\n");
   logger(msg);
 
@@ -164,6 +164,7 @@ void* bb_server (int msock)
         // Accept connection:
         ssock = accept(msock, (struct sockaddr*)&client_addr, &client_addr_len);
         clnt -> sd = ssock;
+
         ip_to_dotted(client_addr.sin_addr.s_addr, clnt -> ip);
         if (ssock < 0)
         {
@@ -189,6 +190,8 @@ int start_server()
   snprintf(msg, MAX_LEN, "Initiating the server start.");
   logger(msg);
   bealive=1;
+
+  clients_list=createList();
 
   // The pid file does not make sense as a lock file since our
   // server never goes down willlingly.  So we do not lock the file,
@@ -332,6 +335,24 @@ int main (int argc, char** argv, char** envp)
 
   while(1)
   {
+    server_config.T_MAX=20;
+    server_config.BP=9000;
+    server_config.SP=10000;
+    server_config.BBFILE=new char[MAX_LEN];
+    server_config.DETACH = true;
+    server_config.DEBUG_DELAY=false;
+
+    server_config.T_MAX_IND=0;
+    server_config.BP_IND=0;
+    server_config.SP_IND=0;
+    server_config.DETACH_IND = 0;
+    server_config.DEBUG_DELAY_IND=0;
+    server_config.PEER_COMMS_IND=0;
+    server_config.BBFILE_IND=0;
+    server_config.CONF_FILE_IND=0;
+
+    force_fetch_config();
+
     pthread_t tt;
     pthread_attr_t ta;
     pthread_attr_init(&ta);
