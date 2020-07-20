@@ -335,23 +335,27 @@ int main (int argc, char** argv, char** envp)
 
   while(1)
   {
-    server_config.T_MAX=20;
-    server_config.BP=9000;
-    server_config.SP=10000;
-    server_config.BBFILE=new char[MAX_LEN];
-    server_config.DETACH = true;
-    server_config.DEBUG_DELAY=false;
+    if(hupReceived==1)
+    {
+      server_config.T_MAX=20;
+      server_config.BP=9000;
+      server_config.SP=10000;
+      server_config.BBFILE=new char[MAX_LEN];
+      server_config.DETACH = true;
+      server_config.DEBUG_DELAY=false;
 
-    server_config.T_MAX_IND=0;
-    server_config.BP_IND=0;
-    server_config.SP_IND=0;
-    server_config.DETACH_IND = 0;
-    server_config.DEBUG_DELAY_IND=0;
-    server_config.PEER_COMMS_IND=0;
-    server_config.BBFILE_IND=0;
-    server_config.CONF_FILE_IND=0;
-
-    force_fetch_config();
+      server_config.T_MAX_IND=0;
+      server_config.BP_IND=0;
+      server_config.SP_IND=0;
+      server_config.DETACH_IND = 0;
+      server_config.DEBUG_DELAY_IND=0;
+      server_config.PEER_COMMS_IND=0;
+      server_config.BBFILE_IND=0;
+      server_config.CONF_FILE_IND=0;
+      
+      force_fetch_config();
+      print_config();             //Print Configurations
+    }
 
     pthread_t tt;
     pthread_attr_t ta;

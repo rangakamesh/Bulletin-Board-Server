@@ -31,7 +31,7 @@ bbserv: tokenize.o tcp-utils.o bbserv_utils.o thrd_mgmt.o  server_operations.o d
 	$(CXX) $(LDFLAGS) -o bbserv bbserv.cc tokenize.o tcp-utils.o bbserv_utils.o thrd_mgmt.o  server_operations.o descriptor.o peer_operations.o linkedList.o
 
 clean:
-	rm -f *~ *.o *.bak core \#*
+	rm -f bbserv *~ *.o *.bak core \#*
 
 distclean: clean
 	rm -f bbserv test filetest *.log *.pid
