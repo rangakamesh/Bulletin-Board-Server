@@ -15,7 +15,6 @@ References :
 
 Root Directory Content:
 -----------------------
-(The assignment was built with Professor Stefan Bruda's solution to CN-Assignment 3 as base code. )
 
 0) Module "bbserv_utils"    	:	The mother module which serves utility functions to basic features like config file loading, command line fetch,
   															information maintenance (peer info, current client etc..)
