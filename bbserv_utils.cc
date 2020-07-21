@@ -53,7 +53,7 @@ void fetch_cmndLine(int argc, char** argv)
         {
             case 'f':
                 server_config.DETACH_IND = 1;
-                server_config.DETACH = false;
+                server_config.CDETACH = false;
                 break;
 
             case 'd':
@@ -260,7 +260,7 @@ void fetch_config()
     {
                 detach_ind=1;
                 if(server_config.DETACH_IND==0)
-                {server_config.DETACH=atol(com_tok[1]);server_config.DETACH_IND=2;}
+                {server_config.FDETACH=atol(com_tok[1]);server_config.DETACH_IND=2;}
                 else
                 {continue;}
     }
@@ -462,18 +462,27 @@ void print_config()
   cout<<"-> "<<type<<"-> Peer listening port : "<<server_config.SP<<" "<<"\n";
 
 
-  if(server_config.DETACH_IND==1)
+  if(server_config.CDETACH==1&&server_config.FDETACH==1)
   {
-    strcpy(type,"Command Line Override");
+    strcpy(type,"Command Line/Conf. File agree on Detach");
   }
-  else if(server_config.DETACH_IND==2)
+
+  if(server_config.CDETACH==1&&server_config.FDETACH==0)
   {
-    strcpy(type,"Config File Setting  ");
+    strcpy(type,"Config File Disagree on Detach");
   }
-  else
+
+  if(server_config.CDETACH==0&&server_config.FDETACH==1)
   {
-    strcpy(type,"System Default       ");
+    strcpy(type,"Command Line Disagree on Detach");
   }
+
+  if(server_config.CDETACH==0&&server_config.FDETACH==0)
+  {
+    strcpy(type,"Command Line/Conf. File Disagree on Detach");
+  }
+
+
   if(server_config.DETACH==0)
   {
     cout<<"-> "<<type<<"-> Server will run on Foreground."<<"\n";

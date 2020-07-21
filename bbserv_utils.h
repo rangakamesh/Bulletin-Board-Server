@@ -41,6 +41,8 @@ typedef struct sconfdescriptor
   int NO_OF_PEERS;
   int PEER_COMMS_IND;
 
+  bool CDETACH;
+  bool FDETACH;
   bool DETACH;
   int DETACH_IND;
 

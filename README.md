@@ -1,25 +1,91 @@
-*Please make and run.*
+Bhuvaneshwaran Ravi,Jayashree Srinivasan,Kameswaran Rangasamy,Serlin Tamilselvam
+bravi19@ubishops.ca,jsrinivasan19@ubishops.ca,krangasamy19@ubishops.ca,stamilselvam19@ubishops.ca
 
-"#" or any other character in the beggining of a line in "bbserv.conf" will make the line commented.
+Bulletin Board Server
+---------------------
+A classic multi-threaded, peer enabled BBS.
+
+References :
+------------
+	[1] Course material and utility packages from Professor Stefan Bruda as part of CS564,
+	    Computer Networks/Computer Networks and Distributed Algorithms (Winter 2020)
+	[2] Concept reference - The Linux Programming Interface by Michael Kerrisk.
+	[3] Course Work done as part of CS564.
+
+
+Root Directory Content:
+-----------------------
+(The assignment was built with Professor Stefan Bruda's solution to CN-Assignment 3 as base code. )
+
+0) Module "bbserv_utils"    	:	The mother module which serves utility functions to basic features like config file loading, command line fetch,
+  															information maintenance (peer info, current client etc..)
+																-> contains a subroutine ip_to_dotted and data structure reference from [1]
+																[bbserv_utils.h,bbserv_utils.cc]
+
+1) bbfile.txt               	: The default bulletin board file where all the BBS messages are stored and managed.
+2) bbserv.cc                	: The MAIN Module, where the program flow starts.
+																-> conceptual reference from [2] and [3].
+
+3) Module "descriptor"      	: All file operations are embedded into a single library. It also provides the file concurrent access system.
+																[descriptor.h,descriptor.cc]
+
+4) Module "linkedList"      	: A simple linked list to maintain the slave client sockets that are current being served to.  
+																It is mainly used to ease of access to sockets in case of SIGHUP or SIGQUIT issue.
+																[linkedList.h,linkedList.cc]
+
+5) Module "peer_operations" 	: Subroutines which communicates to the peer servers and also keeps mother server informed.
+ 																This library only provides the subroutines which are used to receive request "from" the peers and respond to their requests.
+																All the subroutines which are used to communicate "to" the peers are embedded in server_operations.
+																However, this library help initiate and run a seperate group of threads which are used to communicate to the peers concurrently.
+																[peer_operations.h,peer_operations.cc]
+
+																1 mother thread will spawn and initiate all the peer controls and die.
+																2 * T_MAX threads are spawn for the purpose of sending request to the peers("Peer receiver").
+																2 * T_MAX threads are spawn for the purpose of serving to peer request("Peer senders").
+																Hence at any time there will be 3 + T_MAX + 4 * T_MAX threads running on the process.
+																The constant 3 threads controls the main loops.
+																ex : T_MAX of 5, yields 28 threads.
+
+6) Module "thrd_mgmt"  			  : Subroutines which makes life easier handling the thread preallocation and management.
+														    The thread management process has been inspired from using the Agile Scrum work methodology.
+														    There are teams. Teams contains employees and a work queue.
+															  The employess constantly wait for a work queue and work on them whenever available.
+															  Built as part of Course work [3] and edited to suit the current requirement.
+																[thrd_mgmt.h,thrd_mgmt.cc]
+
+7) Module "server_operations" : Subroutines that are threaded to interact with the client and that are threaded to sync client requests to the peers.
+																Subsroutines are explained as part of protocol2pc.txt .
+																[server_operations.h,server_operations.cc]
+
+8) Module "tcp-utils"  			  :	Contains the utilities for network communication and more.
+															  Module is a part of the course materials by Professor Stefan Bruda [1].
+
+9) Module "tokenize"          : A string tokenizer module. Module is a part of the course materials by Dr. Stefan Bruda.
+			   												This modules produces object files upon make.
+
+10) bbserv.log,bbserv.pid..   : Several log files that will be created as part of program initiation.
+																There will also be a cache files as part of SIGHUP.
+
+User guide:
+-----------
+
+The following command line is accepted:
+
+  bbserv [-d] [-f] [-c config_file] [-T T_MAX] [-b bbfile] [-p client_serve_port] [-s peer_serve_port] [peer0_IP:peer0_port] ...
+
+the options can be given in any order, except the command line arguments which should always be given at the end.
+
+The server can handle any type of client (telnet is preferred).
+
+SIGQUIT can be issued to kill the server ensuring proper routine and data maintenance.
+
+SIGHUP can be issue to restart the server ensuring proper routine and data maintenance.
+SIGHUP also clears garbage that has been produced as part of "replace" command in the bbfile.
+
+"#" or "any other character" in the beggining of a line in "bbserv.conf" will make the line commented.
 
 If "-f" is not issued, logs are written to "bbserv.log".
 
-Command to run :
-----------------
-./bbserv -d -c bbserv.conf -T 5 -b bbfile.txt -p 9002 -s 10002 -f
-
-
-Current Bugs:
--------------
-
--> The DAEMON flag must be enabled only if it is set to true both on config file and command line.
-	* The funciton fetch_cmndLine and fetch_config must be fixed as required.
-
--> The "name" in USER command should not accept "\".
-		(Fixed)
-
--> On SIGHUP, the server should not wait for all clients to get disconnected. It should inform the client threads to quit after current command or immediately if idle.
-		(Fixed)
 
 Test Suite :
 ------------
@@ -136,4 +202,4 @@ Test Suite :
 			-> If write is issued before reads, any number reads should wait before until write is completed.
 
 			-> SIGQUIT kills the server.
-			-> SIGHUP restarts the server immediately, but uses the config from configuration file.
+			-> SIGHUP restarts the server immediately, but uses the config from configuration file and clears garbage from bbfile.

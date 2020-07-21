@@ -261,9 +261,22 @@ int main (int argc, char** argv, char** envp)
   server_config.BBFILE_IND=0;
   server_config.CONF_FILE_IND=0;
 
+  server_config.FDETACH=true;
+  server_config.CDETACH=true;
+
   welcome_message();          //Server info notice
   fetch_cmndLine(argc,argv);  //Fetch all command line inputs
   fetch_config();             //Fetch info from the Configuration File
+
+  if(server_config.CDETACH==true && server_config.FDETACH==true)
+  {
+    server_config.DETACH=true;
+  }
+  else
+  {
+    server_config.DETACH=false;
+  }
+
   print_config();             //Print Configurations
 
   // ... and we detach! // ~if {}~ REFERENCE : Code designed and inspired from Professor Stefan Bruda as part of CS564.
@@ -352,7 +365,7 @@ int main (int argc, char** argv, char** envp)
       server_config.PEER_COMMS_IND=0;
       server_config.BBFILE_IND=0;
       server_config.CONF_FILE_IND=0;
-      
+
       force_fetch_config();
       print_config();             //Print Configurations
     }
