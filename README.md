@@ -37,7 +37,7 @@ Root Directory Content:
 																All the subroutines which are used to communicate "to" the peers are embedded in server_operations.
 																However, this library help initiate and run a seperate group of threads which are used to communicate to the peers concurrently.
 																[peer_operations.h,peer_operations.cc]
-
+																
 																1 mother thread will spawn and initiate all the peer controls and die.
 																2 * T_MAX threads are spawn for the purpose of sending request to the peers("Peer receiver").
 																2 * T_MAX threads are spawn for the purpose of serving to peer request("Peer senders").

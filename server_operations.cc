@@ -24,11 +24,11 @@ void* server_operations(client_t* clnt)
   snprintf(msg, 2*MAX_LEN, "Client %ld thread allocation successfull.",ssock);
   logger(msg);
 
-  snprintf(response, 2*MAX_LEN, "\n0.0 Welcome to Bullettin Board Server %s\n",client.ip);
+  snprintf(response, 2*MAX_LEN, "\n0.0 Welcome to Bullettin Board Server %s\n1.USER username\n2.READ msg_number\n3.WRITE text\n4.REPLACE msg_num/message\n",client.ip);
   send(ssock, response, strlen(response),0);
 
-  snprintf(response, 2*MAX_LEN, "\n--bb> ");
-  send(ssock, response, strlen(response),0);
+  // snprintf(response, 2*MAX_LEN, "\n--bb> ");
+  // send(ssock, response, strlen(response),0);
 
   client.uname_avl=false;
   client.user=new char[MAX_LEN];
@@ -77,16 +77,16 @@ void* server_operations(client_t* clnt)
                     snprintf(response, 2*MAX_LEN, "1.0 HELLO %s welcome to the Bullettin Board.\n\n",client.user);
                     send(ssock, response, strlen(response),0);
 
-                    snprintf(response, MAX_LEN, "--bb> ");
-                    send(ssock, response, strlen(response),0);
+                    // snprintf(response, MAX_LEN, "--bb> ");
+                    // send(ssock, response, strlen(response),0);
                   }
                   else
                   {
                     snprintf(response, 2*MAX_LEN, "ERR : The name parameter of USER should not contain the character / in it.\nEx  : USER Michael\n\n");
                     send(ssock, response, strlen(response),0);
 
-                    snprintf(response, MAX_LEN, "--bb> ");
-                    send(ssock, response, strlen(response),0);
+                    // snprintf(response, MAX_LEN, "--bb> ");
+                    // send(ssock, response, strlen(response),0);
                   }
                 }
                 else
@@ -101,8 +101,8 @@ void* server_operations(client_t* clnt)
                   snprintf(response, 2*MAX_LEN, "1.0 HELLO %s welcome to the Bullettin Board.\n\n",client.user);
                   send(ssock, response, strlen(response),0);
 
-                  snprintf(response, MAX_LEN, "--bb> ");
-                  send(ssock, response, strlen(response),0);
+                  // snprintf(response, MAX_LEN, "--bb> ");
+                  // send(ssock, response, strlen(response),0);
                 }
             }
             else
@@ -110,8 +110,8 @@ void* server_operations(client_t* clnt)
               snprintf(response, 2*MAX_LEN, "ERR : The USER command must accompany a name with it.\nEx  : USER Michael\n\n");
               send(ssock, response, strlen(response),0);
 
-              snprintf(response, MAX_LEN, "--bb> ");
-              send(ssock, response, strlen(response),0);
+              // snprintf(response, MAX_LEN, "--bb> ");
+              // send(ssock, response, strlen(response),0);
             }
           }
           else if(strcmp(tolwr(client_command),"read")==0)
@@ -127,24 +127,24 @@ void* server_operations(client_t* clnt)
                       snprintf(response, 2*BBLINE_LEN, "2.0 MESSAGE %s %s\n\n",command[1],temp_line);
                       send(ssock, response, strlen(response),0);
 
-                      snprintf(response, MAX_LEN, "--bb> ");
-                      send(ssock, response, strlen(response),0);
+                      // snprintf(response, MAX_LEN, "--bb> ");
+                      // send(ssock, response, strlen(response),0);
                     }
                     else if(read_return==-2)
                     {
                       snprintf(response, 2*MAX_LEN, "2.2 ERROR READ : Bullettin Board Unavailable\n\n");
                       send(ssock, response, strlen(response),0);
 
-                      snprintf(response, MAX_LEN, "--bb> ");
-                      send(ssock, response, strlen(response),0);
+                      // snprintf(response, MAX_LEN, "--bb> ");
+                      // send(ssock, response, strlen(response),0);
                     }
                     else
                     {
                       snprintf(response, 2*MAX_LEN, "2.1 UNKNOWN %s message not found.\n\n",command[1]);
                       send(ssock, response, strlen(response),0);
 
-                      snprintf(response, MAX_LEN, "--bb> ");
-                      send(ssock, response, strlen(response),0);
+                      // snprintf(response, MAX_LEN, "--bb> ");
+                      // send(ssock, response, strlen(response),0);
 
                     }
                 }
@@ -153,8 +153,8 @@ void* server_operations(client_t* clnt)
                   snprintf(response, 2*MAX_LEN, "2.2 ERROR READ : Improper READ format.\nFORMAT -> READ message-number\nEx  : READ 6\n\n");
                   send(ssock, response, strlen(response),0);
 
-                  snprintf(response, MAX_LEN, "--bb> ");
-                  send(ssock, response, strlen(response),0);
+                  // snprintf(response, MAX_LEN, "--bb> ");
+                  // send(ssock, response, strlen(response),0);
                 }
           }
           else if(strcmp(tolwr(client_command),"write")==0)
@@ -189,8 +189,8 @@ void* server_operations(client_t* clnt)
                     snprintf(response, 2*MAX_LEN, "3.0 WROTE %s\n\n",msg_nbr); //emark
                     send(ssock, response, strlen(response),0);
 
-                    snprintf(response, MAX_LEN, "--bb> ");
-                    send(ssock, response, strlen(response),0);
+                    // snprintf(response, MAX_LEN, "--bb> ");
+                    // send(ssock, response, strlen(response),0);
               }
               else
               {
@@ -198,9 +198,9 @@ void* server_operations(client_t* clnt)
 
                     snprintf(response, 2*MAX_LEN, "3.2 ERROR WRITE : Synchronization error.\n\n");
                     send(ssock, response, strlen(response),0);
-
-                    snprintf(response, MAX_LEN, "--bb> ");
-                    send(ssock, response, strlen(response),0);
+                    //
+                    // snprintf(response, MAX_LEN, "--bb> ");
+                    // send(ssock, response, strlen(response),0);
               }
 
             }
@@ -208,9 +208,9 @@ void* server_operations(client_t* clnt)
             {
               snprintf(response, 2*MAX_LEN, "3.2 ERROR WRITE : Improper WRITE format.\nFORMAT -> WRITE message\nEx  : WRITE jack and jill went up the hill.\n\n");
               send(ssock, response, strlen(response),0);
-
-              snprintf(response, MAX_LEN, "--bb> ");
-              send(ssock, response, strlen(response),0);
+              //
+              // snprintf(response, MAX_LEN, "--bb> ");
+              // send(ssock, response, strlen(response),0);
             }
           }
           else if(strcmp(tolwr(client_command),"replace")==0)
@@ -250,8 +250,8 @@ void* server_operations(client_t* clnt)
                   snprintf(response, 2*MAX_LEN, "3.2 ERROR WRITE : Improper REPLACE format.\nFORMAT -> REPLACE message-number/message\nEx  : REPLACE 6/jack and jill went up the hill.\n\n");
                   send(ssock, response, strlen(response),0);
 
-                  snprintf(response, MAX_LEN, "--bb> ");
-                  send(ssock, response, strlen(response),0);
+                  // snprintf(response, MAX_LEN, "--bb> ");
+                  // send(ssock, response, strlen(response),0);
 
                   continue;
                 }
@@ -265,8 +265,8 @@ void* server_operations(client_t* clnt)
                 snprintf(response, 2*MAX_LEN, "3.1 UNKNOWN %s\n\n",repl_tokens[0]);
                 send(ssock, response, strlen(response),0);
 
-                snprintf(response, MAX_LEN, "--bb> ");
-                send(ssock, response, strlen(response),0);
+                // snprintf(response, MAX_LEN, "--bb> ");
+                // send(ssock, response, strlen(response),0);
               }
               else
               {
@@ -279,16 +279,16 @@ void* server_operations(client_t* clnt)
                         snprintf(response, 2*MAX_LEN, "3.0 WROTE %s\n\n",repl_tokens[0]);
                         send(ssock, response, strlen(response),0);
 
-                        snprintf(response, MAX_LEN, "--bb> ");
-                        send(ssock, response, strlen(response),0);
+                        // snprintf(response, MAX_LEN, "--bb> ");
+                        // send(ssock, response, strlen(response),0);
                   }
                   else
                   {
                         snprintf(response, 2*MAX_LEN, "3.2 ERROR WRITE : Synchronization error.\n\n");
                         send(ssock, response, strlen(response),0);
 
-                        snprintf(response, MAX_LEN, "--bb> ");
-                        send(ssock, response, strlen(response),0);
+                        // snprintf(response, MAX_LEN, "--bb> ");
+                        // send(ssock, response, strlen(response),0);
                   }
 
               }
@@ -300,8 +300,8 @@ void* server_operations(client_t* clnt)
               snprintf(response, 2*MAX_LEN, "3.2 ERROR WRITE : Improper REPLACE format.\nFORMAT -> REPLACE message-number/message\nEx  : REPLACE 6/jack and jill went up the hill.\n\n");
               send(ssock, response, strlen(response),0);
 
-              snprintf(response, MAX_LEN, "--bb> ");
-              send(ssock, response, strlen(response),0);
+              // snprintf(response, MAX_LEN, "--bb> ");
+              // send(ssock, response, strlen(response),0);
             }
 
           }
@@ -311,8 +311,8 @@ void* server_operations(client_t* clnt)
             snprintf(response, 2*MAX_LEN, "ERR : Invalid Command %s. \n\n",request);
             send(ssock, response, strlen(response),0);
 
-            snprintf(response, MAX_LEN, "--bb> ");
-            send(ssock, response, strlen(response),0);
+            // snprintf(response, MAX_LEN, "--bb> ");
+            // send(ssock, response, strlen(response),0);
           }
         }
         else
