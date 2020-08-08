@@ -107,8 +107,17 @@ int write_descriptor(char* msg_number,char* user,char* message,bool peer_work)
 
   if(msg_number!=NULL&&user!=NULL&&message!=NULL)
   {
-    int destination = open(source_file, O_RDWR | O_APPEND);
+    int fd = open(source_file, O_RDONLY);
+    if(fd<0)
+    {
+      pthread_cond_broadcast(&file_queue_a.can_write);
+      pthread_mutex_unlock(&file_queue_a.access_file_queue);
 
+      return -2;
+    }
+    close(fd);
+
+    int destination = open(source_file, O_RDWR | O_APPEND);
     if(destination<0)
     {
       pthread_cond_broadcast(&file_queue_a.can_write);
@@ -366,6 +375,10 @@ long int generate_number()
 {
   long int max=0;
   int fd = open(source_file, O_RDONLY);
+  if(fd<0)
+  {
+    return -2;
+  }
 
   char line[BBLINE_LEN];
 

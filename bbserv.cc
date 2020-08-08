@@ -114,7 +114,10 @@ void quit_handler(int sig)
 
 int pass_to_team(team* file_team, client_t* clnt)
 {
-      if ( add_work_to_team(file_team,(void (*) (void*))server_operations,(void*)clnt) != 0 )
+      client_t* clnt1 = new client_t;
+      *clnt1 = *clnt;
+
+      if ( add_work_to_team(file_team,(void (*) (void*))server_operations,(void*)clnt1) != 0 )
       {
           terminate_team(file_team);
           return -1;
@@ -164,6 +167,9 @@ void* bb_server (int msock)
         // Accept connection:
         ssock = accept(msock, (struct sockaddr*)&client_addr, &client_addr_len);
         clnt -> sd = ssock;
+
+        snprintf(msg, MAX_LEN, "New client accepted : %d",ssock);
+        logger(msg);
 
         ip_to_dotted(client_addr.sin_addr.s_addr, clnt -> ip);
         if (ssock < 0)

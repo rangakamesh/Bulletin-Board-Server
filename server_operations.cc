@@ -184,7 +184,7 @@ void* server_operations(client_t* clnt)
 
               int sync_ret = sync_write(syncer_line);
 
-              if(sync_ret==0)
+              if(sync_ret==0&&gen_num>=0)
               {
                     snprintf(response, 2*MAX_LEN, "3.0 WROTE %s\n\n",msg_nbr); //emark
                     send(ssock, response, strlen(response),0);
@@ -196,8 +196,16 @@ void* server_operations(client_t* clnt)
               {
                     release_number(gen_num);
 
-                    snprintf(response, 2*MAX_LEN, "3.2 ERROR WRITE : Synchronization error.\n\n");
-                    send(ssock, response, strlen(response),0);
+                    if(gen_num>=0)
+                    {
+                      snprintf(response, 2*MAX_LEN, "3.2 ERROR WRITE : Synchronization error.\n\n");
+                      send(ssock, response, strlen(response),0);
+                    }
+                    else
+                    {
+                      snprintf(response, 2*MAX_LEN, "3.2 ERROR WRITE : bbfile not found.\n\n");
+                      send(ssock, response, strlen(response),0);
+                    }
                     //
                     // snprintf(response, MAX_LEN, "--bb> ");
                     // send(ssock, response, strlen(response),0);
