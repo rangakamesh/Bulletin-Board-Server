@@ -1,1 +1,84 @@
-TO BE CONSTRUCT
+Peer Communication Protocol
+---------------------------
+
+Messages Used
+-------------
+
+-> PRECOMMIT
+    --> Message Format : PRECOMMIT username
+        "username" is 'nobody' if the client has not issued the USER command.
+        If USER command is issued then the "username" is the name of the user provided in USER.
+
+-> COMMIT
+    --> COMMIT WRITE
+        > Message Format : COMMIT WRITE msg_nmbr message
+          "msg_nmbr" is the message number decided by the master server.
+          "message" is the content to be written to the file.
+
+    --> COMMIT REPLACE
+        > Message Format : COMMIT REPLACE msg_nmbr/message
+          "msg_nmbr" is the message number decided by the master server.
+          "message" is the content to be written to the file.
+
+-> ABORT
+    --> Message Format : ABORT
+
+-> QUIT
+    --> Message Format : QUIT
+
+What does the messages do?
+--------------------------
+
+PRECOMMIT , is the first message that is being sent to the peers to check their availability.
+If all the peers acknowledge the PRECOMMIT with "positive" then the server proceeds to COMMIT.
+If any one of the peer acknowledge with "negative" or has not acknowledged then the SYNC process is abandoned.
+The SYNC process is abandoned by sending QUIT to all the clients forcefully.
+
+COMMIT, is sent after successfull PRECOMMIT from all the peers. It is sent to the peers to SYNC the command that
+was issued by the client. On a successfull COMMIT run the peers reply "positive" else "negative" or noreply.
+If all the peers reply "positive", the master server executes the command. If any one of the peer says "negative",
+then the master server sends ABORT to all the peers.
+
+ABORT, if a peer receives ABORT then the last executed command on the current session with the master server is undone.
+
+QUIT terminates the current session with the master server.
+
+Peer Communication flow :
+-------------------------
+
+  All Positive scenario
+  ---------------------
+  The master server first sends PRECOMMIT to all the slaves with the username, to check their availability.
+  All the slaves reply "Positive".
+  The master server then sends COMMIT message postfixed with the current client command (WRITE or REPLACE).
+  All the slaves reply "Positive".
+  The master server then executes the client command.
+  On successfull execution the master server sends QUIT to all the slaves.
+
+  Negative PRECOMMIT from one or more peers:
+  ------------------------------------------
+  The master server first sends PRECOMMIT to all the slaves with the username, to check their availability.
+  One or more slaves reply "negative".
+  The master server then sends QUIT to all the slaves.
+  The SYNC process is abandoned and the client is informed of SYNC ERROR.
+
+  Positive PRECOMMIT but one or more COMMIT fails
+  -----------------------------------------------
+  The master server first sends PRECOMMIT to all the slaves with the username, to check their availability.
+  All the slaves reply "Positive".
+  The master server then sends COMMIT message postfixed with the current client command (WRITE or REPLACE).
+  One or more slaves reply "negative".
+  The master server then sends ABORT to all the slaves.
+  The slaves undoes the last command executed if any in current session with master server and terminates the connection.
+  The master server without executing the command conveys SYNC ERROR to the client.
+
+  Positive PRECOMMIT but one or more COMMIT fails with "negative_exists"
+  ----------------------------------------------------------------------
+  The master server first sends PRECOMMIT to all the slaves with the username, to check their availability.
+  All the slaves reply "Positive".
+  The master server then sends COMMIT message postfixed with the current client command (WRITE or REPLACE).
+  One or more slaves reply "negative_exists".
+  The master server then sends ABORT to all the slaves except to the ones which sent "negative_exists".
+  "negative_exists" is sent by the peer if the COMMIT WRITE conveys a message number that already exists in the peers database.
+  The slaves undoes the last command executed if any in current session with master server and terminates the connection.
+  The master server without executing the command conveys SYNC ERROR to the client.

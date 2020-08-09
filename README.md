@@ -37,7 +37,7 @@ Root Directory Content:
 																All the subroutines which are used to communicate "to" the peers are embedded in server_operations.
 																However, this library help initiate and run a seperate group of threads which are used to communicate to the peers concurrently.
 																[peer_operations.h,peer_operations.cc]
-																
+
 																1 mother thread will spawn and initiate all the peer controls and die.
 																2 * T_MAX threads are spawn for the purpose of sending request to the peers("Peer receiver").
 																2 * T_MAX threads are spawn for the purpose of serving to peer request("Peer senders").
@@ -64,6 +64,8 @@ Root Directory Content:
 
 10) bbserv.log,bbserv.pid..   : Several log files that will be created as part of program initiation.
 																There will also be a cache files as part of SIGHUP.
+
+11) protocol2pc.txt 					: Explanation about the peer communication protocol and its message flow.
 
 User guide:
 -----------
@@ -196,7 +198,7 @@ Test Suite :
 			-> If bulletin file exists upon server initiation it is used as is.
 			-> New message numbers should not exists already.[generate_number function]
 
-			-> If multiple reads and a write is issued at the same time, where any one of the read is issued before the write, then.
+			-> If multiple reads and a writes are issued at the same time, where any one of the read is issued before the write, then.
 			   The server allows all the "reads" to be executed and then executes the write.
 			-> If write is issued before reads, any number reads should wait before until write is completed.
 

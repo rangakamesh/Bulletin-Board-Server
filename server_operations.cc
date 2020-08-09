@@ -426,6 +426,23 @@ int sync_write(line* line_a)
   }
   else
   {
+    comms_info->pos_count=0;
+    comms_info->neg_count=0;
+
+    for(int i=0;i<server_config.NO_OF_PEERS;i++)
+    {
+      comms_info->peer_addr[i].marked=false;
+    }
+
+    for(int i=0;i<server_config.NO_OF_PEERS;i++)
+    {
+        if ( add_work_to_team(peer_sender_team,(void (*) (void*))send_quit,(void*)comms_info) != 0 )
+        {
+            terminate_team(peer_sender_team);
+            return -1;
+        }
+    }
+
     return -1;
   }
 
