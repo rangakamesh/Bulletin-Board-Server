@@ -1,17 +1,6 @@
-Bhuvaneshwaran Ravi,Jayashree Srinivasan,Kameswaran Rangasamy,Serlin Tamilselvam
-bravi19@ubishops.ca,jsrinivasan19@ubishops.ca,krangasamy19@ubishops.ca,stamilselvam19@ubishops.ca
-
 Bulletin Board Server
 ---------------------
 A classic multi-threaded, peer enabled BBS.
-
-References :
-------------
-	[1] Course material and utility packages from Professor Stefan Bruda as part of CS564,
-	    Computer Networks/Computer Networks and Distributed Algorithms (Winter 2020)
-	[2] Concept reference - The Linux Programming Interface by Michael Kerrisk.
-	[3] Course Work done as part of CS564.
-
 
 Root Directory Content:
 -----------------------
